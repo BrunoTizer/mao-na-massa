@@ -1,0 +1,7 @@
+spring:
+  jpa:
+    show-sql: true
+  application:
+    name: mao-na-massa
+  profiles:
+    active: ${PROFILE:local}
