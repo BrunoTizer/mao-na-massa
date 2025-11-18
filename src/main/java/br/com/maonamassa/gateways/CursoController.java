@@ -23,9 +23,19 @@ public class CursoController {
     private final AreaRepository areaRepository;
 
     @GetMapping
-    public Page<CursoResponseDto> listarTodos(Pageable pageable) {
-        return cursoRepository.findAll(pageable)
-                .map(CursoResponseDto::fromCurso);
+    public Page<CursoResponseDto> listarTodos(
+            @RequestParam(required = false) UUID areaId,
+            Pageable pageable
+    ) {
+        Page<Curso> cursos;
+
+        if (areaId != null) {
+            cursos = cursoRepository.findByAreaId(areaId, pageable);
+        } else {
+            cursos = cursoRepository.findAll(pageable);
+        }
+
+        return cursos.map(CursoResponseDto::fromCurso);
     }
 
     @GetMapping("/{id}")

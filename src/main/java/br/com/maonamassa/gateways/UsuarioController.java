@@ -23,9 +23,19 @@ public class UsuarioController {
     private final AreaRepository areaRepository;
 
     @GetMapping
-    public Page<UsuarioResponseDto> listarTodos(Pageable pageable) {
-        return usuarioRepository.findAll(pageable)
-                .map(UsuarioResponseDto::fromUsuario);
+    public Page<UsuarioResponseDto> listarTodos(
+            @RequestParam(required = false) String cidade,
+            Pageable pageable
+    ) {
+        Page<Usuario> usuarios;
+
+        if (cidade != null) {
+            usuarios = usuarioRepository.findByCidade(cidade, pageable);
+        } else {
+            usuarios = usuarioRepository.findAll(pageable);
+        }
+
+        return usuarios.map(UsuarioResponseDto::fromUsuario);
     }
 
     @GetMapping("/{id}")

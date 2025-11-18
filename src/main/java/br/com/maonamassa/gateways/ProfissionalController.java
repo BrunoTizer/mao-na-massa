@@ -23,9 +23,19 @@ public class ProfissionalController {
     private final UsuarioRepository usuarioRepository;
 
     @GetMapping
-    public Page<ProfissionalResponseDto> listarTodos(Pageable pageable) {
-        return profissionalRepository.findAll(pageable)
-                .map(ProfissionalResponseDto::fromProfissional);
+    public Page<ProfissionalResponseDto> listarTodos(
+            @RequestParam(required = false) Boolean disponivel,
+            Pageable pageable
+    ) {
+        Page<Profissional> profissionais;
+
+        if (disponivel != null) {
+            profissionais = profissionalRepository.findByDisponivel(disponivel, pageable);
+        } else {
+            profissionais = profissionalRepository.findAll(pageable);
+        }
+
+        return profissionais.map(ProfissionalResponseDto::fromProfissional);
     }
 
     @GetMapping("/{id}")

@@ -23,9 +23,19 @@ public class ServicoController {
     private final ProfissionalRepository profissionalRepository;
 
     @GetMapping
-    public Page<ServicoResponseDto> listarTodos(Pageable pageable) {
-        return servicoRepository.findAll(pageable)
-                .map(ServicoResponseDto::fromServico);
+    public Page<ServicoResponseDto> listarTodos(
+            @RequestParam(required = false) String cidade,
+            Pageable pageable
+    ) {
+        Page<Servico> servicos;
+
+        if (cidade != null) {
+            servicos = servicoRepository.findByCidade(cidade, pageable);
+        } else {
+            servicos = servicoRepository.findAll(pageable);
+        }
+
+        return servicos.map(ServicoResponseDto::fromServico);
     }
 
     @GetMapping("/{id}")

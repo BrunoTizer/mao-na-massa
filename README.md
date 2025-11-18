@@ -117,6 +117,20 @@ Plataforma que capacita pessoas em ofícios manuais (pedreiro, eletricista, enca
 A documentação completa da API está disponível via Swagger:
 - Acessar: `http://localhost:8080/swagger-ui.html`
 
+## Paginação e Ordenação
+
+Todos os endpoints de listagem suportam paginação e ordenação:
+
+- `?page=0` - Número da página (começa em 0)
+- `?size=10` - Quantidade de itens por página
+- `?sort=campo` - Ordenar por campo
+- `?sort=campo,desc` - Ordenar descendente
+
+Exemplos:
+- `GET /api/v1/usuarios?page=0&size=5`
+- `GET /api/v1/cursos?page=0&size=10&sort=titulo`
+- `GET /api/v1/servicos?sort=preco,desc`
+
 ## Endpoints da API
 
 ### Areas
