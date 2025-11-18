@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public record AulaResponseDto(
         UUID id,
-        UUID cursoId,
+        CursoResponseDto curso,
         String titulo,
         String conteudo,
         Integer ordem
@@ -14,7 +14,7 @@ public record AulaResponseDto(
     public static AulaResponseDto fromAula(Aula aula) {
         return new AulaResponseDto(
                 aula.getId(),
-                aula.getCurso().getId(),
+                CursoResponseDto.fromCurso(aula.getCurso()),
                 aula.getTitulo(),
                 aula.getConteudo(),
                 aula.getOrdem()

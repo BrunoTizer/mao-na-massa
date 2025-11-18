@@ -7,8 +7,8 @@ import java.util.UUID;
 
 public record AvaliacaoResponseDto(
         UUID id,
-        UUID servicoId,
-        UUID usuarioId,
+        ServicoResponseDto servico,
+        UsuarioResponseDto usuario,
         Integer nota,
         String comentario,
         LocalDate data
@@ -16,8 +16,8 @@ public record AvaliacaoResponseDto(
     public static AvaliacaoResponseDto fromAvaliacao(Avaliacao avaliacao) {
         return new AvaliacaoResponseDto(
                 avaliacao.getId(),
-                avaliacao.getServico().getId(),
-                avaliacao.getUsuario().getId(),
+                ServicoResponseDto.fromServico(avaliacao.getServico()),
+                UsuarioResponseDto.fromUsuario(avaliacao.getUsuario()),
                 avaliacao.getNota(),
                 avaliacao.getComentario(),
                 avaliacao.getData()

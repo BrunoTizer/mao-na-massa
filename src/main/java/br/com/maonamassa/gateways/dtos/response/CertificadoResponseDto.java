@@ -7,8 +7,8 @@ import java.util.UUID;
 
 public record CertificadoResponseDto(
         UUID id,
-        UUID usuarioId,
-        UUID cursoId,
+        UsuarioResponseDto usuario,
+        CursoResponseDto curso,
         Double notaFinal,
         LocalDate dataConclusao,
         String codigoCertificado
@@ -16,8 +16,8 @@ public record CertificadoResponseDto(
     public static CertificadoResponseDto fromCertificado(Certificado certificado) {
         return new CertificadoResponseDto(
                 certificado.getId(),
-                certificado.getUsuario().getId(),
-                certificado.getCurso().getId(),
+                UsuarioResponseDto.fromUsuario(certificado.getUsuario()),
+                CursoResponseDto.fromCurso(certificado.getCurso()),
                 certificado.getNotaFinal(),
                 certificado.getDataConclusao(),
                 certificado.getCodigoCertificado()

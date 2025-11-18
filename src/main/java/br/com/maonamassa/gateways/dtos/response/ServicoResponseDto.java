@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public record ServicoResponseDto(
         UUID id,
-        UUID profissionalId,
+        ProfissionalResponseDto profissional,
         String titulo,
         String descricao,
         String cidade,
@@ -17,7 +17,7 @@ public record ServicoResponseDto(
     public static ServicoResponseDto fromServico(Servico servico) {
         return new ServicoResponseDto(
                 servico.getId(),
-                servico.getProfissional().getId(),
+                ProfissionalResponseDto.fromProfissional(servico.getProfissional()),
                 servico.getTitulo(),
                 servico.getDescricao(),
                 servico.getCidade(),

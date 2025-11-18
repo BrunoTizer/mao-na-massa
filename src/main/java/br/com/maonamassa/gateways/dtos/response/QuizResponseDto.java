@@ -6,14 +6,14 @@ import java.util.UUID;
 
 public record QuizResponseDto(
         UUID id,
-        UUID cursoId,
+        CursoResponseDto curso,
         String pergunta,
         String respostaCorreta
 ) {
     public static QuizResponseDto fromQuiz(Quiz quiz) {
         return new QuizResponseDto(
                 quiz.getId(),
-                quiz.getCurso().getId(),
+                CursoResponseDto.fromCurso(quiz.getCurso()),
                 quiz.getPergunta(),
                 quiz.getRespostaCorreta()
         );

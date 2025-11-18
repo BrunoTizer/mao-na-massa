@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public record ProfissionalResponseDto(
         UUID id,
-        UUID usuarioId,
+        UsuarioResponseDto usuario,
         String descricao,
         Double avaliacaoMedia,
         Boolean disponivel
@@ -14,7 +14,7 @@ public record ProfissionalResponseDto(
     public static ProfissionalResponseDto fromProfissional(Profissional profissional) {
         return new ProfissionalResponseDto(
                 profissional.getId(),
-                profissional.getUsuario().getId(),
+                UsuarioResponseDto.fromUsuario(profissional.getUsuario()),
                 profissional.getDescricao(),
                 profissional.getAvaliacaoMedia(),
                 profissional.getDisponivel()
