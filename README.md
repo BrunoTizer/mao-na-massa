@@ -25,13 +25,17 @@ Plataforma que capacita pessoas em ofícios manuais (pedreiro, eletricista, enca
 
 ## Entidades do Sistema
 
+### Area
+- id: UUID
+- nome: String
+
 ### Usuario
 - id: UUID
 - nome: String
 - email: String
 - senha: String
 - cidade: String
-- areaInteresse: String
+- area: Area (relacionamento)
 - tipoUsuario: String
 - dataCriacao: LocalDate
 
@@ -39,7 +43,7 @@ Plataforma que capacita pessoas em ofícios manuais (pedreiro, eletricista, enca
 - id: UUID
 - titulo: String
 - descricao: String
-- area: String
+- area: Area (relacionamento)
 - nivel: String
 - dataCriacao: LocalDate
 
@@ -98,6 +102,8 @@ Plataforma que capacita pessoas em ofícios manuais (pedreiro, eletricista, enca
 
 ## Relacionamentos
 
+- Usuario tem Area (ManyToOne)
+- Curso tem Area (ManyToOne)
 - Aula tem Curso (ManyToOne)
 - Quiz tem Curso (ManyToOne)
 - RespostaQuiz tem Usuario e Quiz (ManyToOne)
@@ -112,6 +118,13 @@ A documentação completa da API está disponível via Swagger:
 - Acessar: `http://localhost:8080/swagger-ui.html`
 
 ## Endpoints da API
+
+### Areas
+- `GET /api/v1/areas` - Listar
+- `GET /api/v1/areas/{id}` - Buscar
+- `POST /api/v1/areas` - Criar
+- `PUT /api/v1/areas/{id}` - Atualizar
+- `DELETE /api/v1/areas/{id}` - Deletar
 
 ### Usuarios
 - `GET /api/v1/usuarios` - Listar

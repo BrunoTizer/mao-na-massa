@@ -11,7 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 @RestController
@@ -24,11 +25,9 @@ public class CertificadoController {
     private final CursoRepository cursoRepository;
 
     @GetMapping
-    public List<CertificadoResponseDto> listarTodos() {
-        return certificadoRepository.findAll()
-                .stream()
-                .map(CertificadoResponseDto::fromCertificado)
-                .toList();
+    public Page<CertificadoResponseDto> listarTodos(Pageable pageable) {
+        return certificadoRepository.findAll(pageable)
+                .map(CertificadoResponseDto::fromCertificado);
     }
 
     @GetMapping("/{id}")

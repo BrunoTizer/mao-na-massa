@@ -10,7 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 @RestController
@@ -22,11 +23,9 @@ public class QuizController {
     private final CursoRepository cursoRepository;
 
     @GetMapping
-    public List<QuizResponseDto> listarTodos() {
-        return quizRepository.findAll()
-                .stream()
-                .map(QuizResponseDto::fromQuiz)
-                .toList();
+    public Page<QuizResponseDto> listarTodos(Pageable pageable) {
+        return quizRepository.findAll(pageable)
+                .map(QuizResponseDto::fromQuiz);
     }
 
     @GetMapping("/{id}")

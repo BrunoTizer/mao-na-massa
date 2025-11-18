@@ -9,7 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 @RestController
@@ -20,11 +21,9 @@ public class AreaController {
     private final AreaRepository areaRepository;
 
     @GetMapping
-    public List<AreaResponseDto> listarTodos() {
-        return areaRepository.findAll()
-                .stream()
-                .map(AreaResponseDto::fromArea)
-                .toList();
+    public Page<AreaResponseDto> listarTodos(Pageable pageable) {
+        return areaRepository.findAll(pageable)
+                .map(AreaResponseDto::fromArea);
     }
 
     @GetMapping("/{id}")
