@@ -2,9 +2,11 @@ package br.com.maonamassa.gateways.dtos.request;
 
 import br.com.maonamassa.domains.Curso;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 public class CursoRequestDto {
@@ -15,8 +17,8 @@ public class CursoRequestDto {
     @NotBlank(message = "Descrição é obrigatória")
     private String descricao;
 
-    @NotBlank(message = "Área é obrigatória")
-    private String area;
+    @NotNull(message = "ID da área é obrigatório")
+    private UUID areaId;
 
     @NotBlank(message = "Nível é obrigatório")
     private String nivel;
@@ -25,7 +27,6 @@ public class CursoRequestDto {
         return Curso.builder()
                 .titulo(this.titulo)
                 .descricao(this.descricao)
-                .area(this.area)
                 .nivel(this.nivel)
                 .dataCriacao(LocalDate.now())
                 .build();

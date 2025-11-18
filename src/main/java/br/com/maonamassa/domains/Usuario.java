@@ -24,7 +24,11 @@ public class Usuario {
     private String email;
     private String senha;
     private String cidade;
-    private String areaInteresse;
+
+    @ManyToOne
+    @JoinColumn(name = "area_id")
+    private Area area;
+
     private String tipoUsuario;
     private LocalDate dataCriacao;
 

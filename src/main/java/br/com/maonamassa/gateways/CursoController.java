@@ -1,5 +1,6 @@
 package br.com.maonamassa.gateways;
 
+import br.com.maonamassa.domains.Area;
 import br.com.maonamassa.domains.Curso;
 import br.com.maonamassa.gateways.dtos.request.CursoRequestDto;
 import br.com.maonamassa.gateways.dtos.response.CursoResponseDto;
@@ -18,6 +19,7 @@ import java.util.UUID;
 public class CursoController {
 
     private final CursoRepository cursoRepository;
+    private final AreaRepository areaRepository;
 
     @GetMapping
     public List<CursoResponseDto> listarTodos() {
@@ -36,7 +38,8 @@ public class CursoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CursoResponseDto criar(@Valid @RequestBody CursoRequestDto dto) {
-        Curso curso = dto.toCurso();
+        Area area = areaRepository.findById(dto.getAreaId()).get();
+        Curso curso = dto.toCurso().withArea(area);
         Curso salvo = cursoRepository.save(curso);
         return CursoResponseDto.fromCurso(salvo);
     }
@@ -44,10 +47,11 @@ public class CursoController {
     @PutMapping("/{id}")
     public CursoResponseDto atualizar(@PathVariable String id, @Valid @RequestBody CursoRequestDto dto) {
         Curso curso = cursoRepository.findById(UUID.fromString(id)).get();
+        Area area = areaRepository.findById(dto.getAreaId()).get();
         Curso atualizado = curso
                 .withTitulo(dto.getTitulo())
                 .withDescricao(dto.getDescricao())
-                .withArea(dto.getArea())
+                .withArea(area)
                 .withNivel(dto.getNivel());
         Curso salvo = cursoRepository.save(atualizado);
         return CursoResponseDto.fromCurso(salvo);

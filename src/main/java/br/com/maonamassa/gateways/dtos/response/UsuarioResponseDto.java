@@ -10,7 +10,7 @@ public record UsuarioResponseDto(
         String nome,
         String email,
         String cidade,
-        String areaInteresse,
+        AreaResponseDto area,
         String tipoUsuario,
         LocalDate dataCriacao
 ) {
@@ -20,7 +20,7 @@ public record UsuarioResponseDto(
                 usuario.getNome(),
                 usuario.getEmail(),
                 usuario.getCidade(),
-                usuario.getAreaInteresse(),
+                AreaResponseDto.fromArea(usuario.getArea()),
                 usuario.getTipoUsuario(),
                 usuario.getDataCriacao()
         );

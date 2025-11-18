@@ -3,9 +3,11 @@ package br.com.maonamassa.gateways.dtos.request;
 import br.com.maonamassa.domains.Usuario;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 public class UsuarioRequestDto {
@@ -23,7 +25,8 @@ public class UsuarioRequestDto {
     @NotBlank(message = "Cidade é obrigatória")
     private String cidade;
 
-    private String areaInteresse;
+    @NotNull(message = "ID da área é obrigatório")
+    private UUID areaId;
 
     @NotBlank(message = "Tipo de usuário é obrigatório")
     private String tipoUsuario;
@@ -34,7 +37,6 @@ public class UsuarioRequestDto {
                 .email(this.email)
                 .senha(this.senha)
                 .cidade(this.cidade)
-                .areaInteresse(this.areaInteresse)
                 .tipoUsuario(this.tipoUsuario)
                 .dataCriacao(LocalDate.now())
                 .build();

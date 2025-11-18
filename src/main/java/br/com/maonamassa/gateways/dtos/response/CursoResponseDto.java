@@ -9,7 +9,7 @@ public record CursoResponseDto(
         UUID id,
         String titulo,
         String descricao,
-        String area,
+        AreaResponseDto area,
         String nivel,
         LocalDate dataCriacao
 ) {
@@ -18,7 +18,7 @@ public record CursoResponseDto(
                 curso.getId(),
                 curso.getTitulo(),
                 curso.getDescricao(),
-                curso.getArea(),
+                AreaResponseDto.fromArea(curso.getArea()),
                 curso.getNivel(),
                 curso.getDataCriacao()
         );

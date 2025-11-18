@@ -3,7 +3,6 @@ package br.com.maonamassa.domains;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 @With
@@ -13,21 +12,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-@Table(name = "cursos")
-public class Curso {
+@Table(name = "areas")
+public class Area {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String titulo;
-    private String descricao;
-
-    @ManyToOne
-    @JoinColumn(name = "area_id")
-    private Area area;
-
-    private String nivel;
-    private LocalDate dataCriacao;
+    private String nome;
 
 }
