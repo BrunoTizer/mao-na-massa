@@ -131,6 +131,15 @@ Exemplos:
 - `GET /api/v1/cursos?page=0&size=10&sort=titulo`
 - `GET /api/v1/servicos?sort=preco,desc`
 
+## Filtros
+
+Alguns endpoints possuem filtros opcionais:
+
+- `GET /api/v1/usuarios?cidade=Sao Paulo` - Filtrar por cidade
+- `GET /api/v1/cursos?areaId=xxx` - Filtrar por área
+- `GET /api/v1/servicos?cidade=Rio de Janeiro` - Filtrar por cidade
+- `GET /api/v1/profissionais?disponivel=true` - Filtrar por disponibilidade
+
 ## Endpoints da API
 
 ### Areas
