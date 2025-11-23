@@ -11,4 +11,5 @@ import java.util.UUID;
 @Repository
 public interface CursoRepository extends JpaRepository<Curso, UUID> {
     Page<Curso> findByAreaId(UUID areaId, Pageable pageable);
+    boolean existsByAreaId(UUID areaId);
 }

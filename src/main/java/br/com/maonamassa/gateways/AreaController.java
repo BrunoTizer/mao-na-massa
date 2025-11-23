@@ -19,6 +19,7 @@ import java.util.UUID;
 public class AreaController {
 
     private final AreaRepository areaRepository;
+    private final CursoRepository cursoRepository;
 
     @GetMapping
     public Page<AreaResponseDto> listarTodos(Pageable pageable) {
@@ -49,8 +50,14 @@ public class AreaController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletar(@PathVariable String id) {
-        areaRepository.deleteById(UUID.fromString(id));
+    public ResponseEntity<?> deletar(@PathVariable String id) {
+        UUID areaId = UUID.fromString(id);
+
+        if (cursoRepository.existsByAreaId(areaId)) {
+            return ResponseEntity.badRequest().body("Não é possível excluir esta área pois existem cursos vinculados a ela");
+        }
+
+        areaRepository.deleteById(areaId);
+        return ResponseEntity.noContent().build();
     }
 }
