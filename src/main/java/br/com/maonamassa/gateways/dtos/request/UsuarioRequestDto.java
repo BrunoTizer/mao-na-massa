@@ -25,7 +25,6 @@ public class UsuarioRequestDto {
     @NotBlank(message = "Cidade é obrigatória")
     private String cidade;
 
-    @NotNull(message = "ID da área é obrigatório")
     private UUID areaId;
 
     @NotBlank(message = "Tipo de usuário é obrigatório")

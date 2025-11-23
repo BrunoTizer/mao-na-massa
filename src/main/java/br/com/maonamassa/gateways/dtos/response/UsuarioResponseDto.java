@@ -20,7 +20,7 @@ public record UsuarioResponseDto(
                 usuario.getNome(),
                 usuario.getEmail(),
                 usuario.getCidade(),
-                AreaResponseDto.fromArea(usuario.getArea()),
+                usuario.getArea() != null ? AreaResponseDto.fromArea(usuario.getArea()) : null,
                 usuario.getTipoUsuario(),
                 usuario.getDataCriacao()
         );
