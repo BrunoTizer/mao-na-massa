@@ -112,6 +112,65 @@ Plataforma que capacita pessoas em ofícios manuais (pedreiro, eletricista, enca
 - Servico tem Profissional (ManyToOne)
 - Avaliacao tem Servico e Usuario (ManyToOne)
 
+## Autenticação JWT
+
+A API utiliza autenticação JWT (JSON Web Token) para proteger os endpoints.
+
+### Endpoints Públicos (sem autenticação)
+- `POST /auth/registrar` - Cadastrar novo usuário
+- `POST /auth/login` - Fazer login
+- `/h2-console/**` - Console do banco H2
+- `/swagger-ui/**` - Documentação Swagger
+- `/v3/api-docs/**` - OpenAPI docs
+
+### Endpoints Protegidos
+Todos os endpoints `/api/v1/**` requerem autenticação JWT.
+
+### Como autenticar
+
+1. **Registrar um novo usuário:**
+```bash
+POST /auth/registrar
+Content-Type: application/json
+
+{
+  "nome": "João Silva",
+  "email": "joao@email.com",
+  "senha": "senha123",
+  "cidade": "São Paulo",
+  "tipoUsuario": "ALUNO"
+}
+```
+
+2. **Fazer login:**
+```bash
+POST /auth/login
+Content-Type: application/json
+
+{
+  "email": "joao@email.com",
+  "senha": "senha123"
+}
+```
+
+Resposta:
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9..."
+}
+```
+
+3. **Usar o token nas requisições:**
+```bash
+GET /api/v1/usuarios
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+```
+
+### Configurações JWT
+- **Expiração do token:** 24 horas
+- **Algoritmo:** HS256
+- **Criptografia de senhas:** BCrypt
+
 ## Documentação da API
 
 A documentação completa da API está disponível via Swagger:
@@ -141,6 +200,10 @@ Alguns endpoints possuem filtros opcionais:
 - `GET /api/v1/profissionais?disponivel=true` - Filtrar por disponibilidade
 
 ## Endpoints da API
+
+### Autenticação (Públicos)
+- `POST /auth/registrar` - Cadastrar usuário
+- `POST /auth/login` - Fazer login
 
 ### Areas
 - `GET /api/v1/areas` - Listar
