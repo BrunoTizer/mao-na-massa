@@ -1,17 +1,16 @@
 package br.com.maonamassa.gateways;
 
-import br.com.maonamassa.domains.Profissional;
-import br.com.maonamassa.domains.Usuario;
 import br.com.maonamassa.gateways.dtos.request.ProfissionalRequestDto;
 import br.com.maonamassa.gateways.dtos.response.ProfissionalResponseDto;
+import br.com.maonamassa.services.ProfissionalService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 @RestController
@@ -19,56 +18,37 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProfissionalController {
 
-    private final ProfissionalRepository profissionalRepository;
-    private final UsuarioRepository usuarioRepository;
+    private final ProfissionalService profissionalService;
 
     @GetMapping
     public Page<ProfissionalResponseDto> listarTodos(
             @RequestParam(required = false) Boolean disponivel,
             Pageable pageable
     ) {
-        Page<Profissional> profissionais;
-
-        if (disponivel != null) {
-            profissionais = profissionalRepository.findByDisponivel(disponivel, pageable);
-        } else {
-            profissionais = profissionalRepository.findAll(pageable);
-        }
-
-        return profissionais.map(ProfissionalResponseDto::fromProfissional);
+        return profissionalService.listarTodos(disponivel, pageable);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProfissionalResponseDto> buscarPorId(@PathVariable String id) {
-        Profissional profissional = profissionalRepository.findById(UUID.fromString(id)).get();
-        return ResponseEntity.ok(ProfissionalResponseDto.fromProfissional(profissional));
+        ProfissionalResponseDto profissional = profissionalService.buscarPorId(UUID.fromString(id));
+        return ResponseEntity.ok(profissional);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProfissionalResponseDto criar(@Valid @RequestBody ProfissionalRequestDto dto) {
-        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId()).get();
-        Profissional profissional = dto.toProfissional().withUsuario(usuario);
-        Profissional salvo = profissionalRepository.save(profissional);
-        return ProfissionalResponseDto.fromProfissional(salvo);
+        return profissionalService.criar(dto);
     }
 
     @PutMapping("/{id}")
     public ProfissionalResponseDto atualizar(@PathVariable String id, @Valid @RequestBody ProfissionalRequestDto dto) {
-        Profissional profissional = profissionalRepository.findById(UUID.fromString(id)).get();
-        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId()).get();
-        Profissional atualizado = profissional
-                .withUsuario(usuario)
-                .withDescricao(dto.getDescricao())
-                .withAvaliacaoMedia(dto.getAvaliacaoMedia())
-                .withDisponivel(dto.getDisponivel());
-        Profissional salvo = profissionalRepository.save(atualizado);
-        return ProfissionalResponseDto.fromProfissional(salvo);
+        return profissionalService.atualizar(UUID.fromString(id), dto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@PathVariable String id) {
-        profissionalRepository.deleteById(UUID.fromString(id));
+        profissionalService.deletar(UUID.fromString(id));
     }
 }
+
