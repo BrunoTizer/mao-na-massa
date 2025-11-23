@@ -28,6 +28,12 @@ public class AulaController {
                 .map(AulaResponseDto::fromAula);
     }
 
+    @GetMapping("/curso/{cursoId}")
+    public Page<AulaResponseDto> listarPorCurso(@PathVariable String cursoId, Pageable pageable) {
+        return aulaRepository.findByCursoId(UUID.fromString(cursoId), pageable)
+                .map(AulaResponseDto::fromAula);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<AulaResponseDto> buscarPorId(@PathVariable String id) {
         Aula aula = aulaRepository.findById(UUID.fromString(id)).get();
