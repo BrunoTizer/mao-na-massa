@@ -1,6 +1,8 @@
 package br.com.maonamassa.services;
 
 import br.com.maonamassa.domains.Area;
+import br.com.maonamassa.exceptions.BusinessException;
+import br.com.maonamassa.exceptions.ResourceNotFoundException;
 import br.com.maonamassa.gateways.AreaRepository;
 import br.com.maonamassa.gateways.CursoRepository;
 import br.com.maonamassa.gateways.dtos.request.AreaRequestDto;
@@ -26,7 +28,7 @@ public class AreaService {
 
     public AreaResponseDto buscarPorId(UUID id) {
         Area area = areaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Área não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Área não encontrada"));
         return AreaResponseDto.fromArea(area);
     }
 
@@ -38,7 +40,7 @@ public class AreaService {
 
     public AreaResponseDto atualizar(UUID id, AreaRequestDto dto) {
         Area area = areaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Área não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Área não encontrada"));
         Area atualizada = area.withNome(dto.getNome());
         Area salva = areaRepository.save(atualizada);
         return AreaResponseDto.fromArea(salva);
@@ -46,11 +48,11 @@ public class AreaService {
 
     public void deletar(UUID id) {
         if (!areaRepository.existsById(id)) {
-            throw new RuntimeException("Área não encontrada");
+            throw new ResourceNotFoundException("Área não encontrada");
         }
 
         if (cursoRepository.existsByAreaId(id)) {
-            throw new RuntimeException("Não é possível excluir esta área pois existem cursos vinculados a ela");
+            throw new BusinessException("Não é possível excluir esta área pois existem cursos vinculados a ela");
         }
 
         areaRepository.deleteById(id);
