@@ -1,17 +1,16 @@
 package br.com.maonamassa.gateways;
 
-import br.com.maonamassa.domains.Curso;
-import br.com.maonamassa.domains.Quiz;
 import br.com.maonamassa.gateways.dtos.request.QuizRequestDto;
 import br.com.maonamassa.gateways.dtos.response.QuizResponseDto;
+import br.com.maonamassa.services.QuizService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 @RestController
@@ -19,45 +18,34 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class QuizController {
 
-    private final QuizRepository quizRepository;
-    private final CursoRepository cursoRepository;
+    private final QuizService quizService;
 
     @GetMapping
     public Page<QuizResponseDto> listarTodos(Pageable pageable) {
-        return quizRepository.findAll(pageable)
-                .map(QuizResponseDto::fromQuiz);
+        return quizService.listarTodos(pageable);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<QuizResponseDto> buscarPorId(@PathVariable String id) {
-        Quiz quiz = quizRepository.findById(UUID.fromString(id)).get();
-        return ResponseEntity.ok(QuizResponseDto.fromQuiz(quiz));
+        QuizResponseDto quiz = quizService.buscarPorId(UUID.fromString(id));
+        return ResponseEntity.ok(quiz);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public QuizResponseDto criar(@Valid @RequestBody QuizRequestDto dto) {
-        Curso curso = cursoRepository.findById(dto.getCursoId()).get();
-        Quiz quiz = dto.toQuiz().withCurso(curso);
-        Quiz salvo = quizRepository.save(quiz);
-        return QuizResponseDto.fromQuiz(salvo);
+        return quizService.criar(dto);
     }
 
     @PutMapping("/{id}")
     public QuizResponseDto atualizar(@PathVariable String id, @Valid @RequestBody QuizRequestDto dto) {
-        Quiz quiz = quizRepository.findById(UUID.fromString(id)).get();
-        Curso curso = cursoRepository.findById(dto.getCursoId()).get();
-        Quiz atualizado = quiz
-                .withCurso(curso)
-                .withPergunta(dto.getPergunta())
-                .withRespostaCorreta(dto.getRespostaCorreta());
-        Quiz salvo = quizRepository.save(atualizado);
-        return QuizResponseDto.fromQuiz(salvo);
+        return quizService.atualizar(UUID.fromString(id), dto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@PathVariable String id) {
-        quizRepository.deleteById(UUID.fromString(id));
+        quizService.deletar(UUID.fromString(id));
     }
 }
+

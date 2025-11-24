@@ -1,18 +1,16 @@
 package br.com.maonamassa.gateways;
 
-import br.com.maonamassa.domains.Avaliacao;
-import br.com.maonamassa.domains.Servico;
-import br.com.maonamassa.domains.Usuario;
 import br.com.maonamassa.gateways.dtos.request.AvaliacaoRequestDto;
 import br.com.maonamassa.gateways.dtos.response.AvaliacaoResponseDto;
+import br.com.maonamassa.services.AvaliacaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 @RestController
@@ -20,37 +18,29 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AvaliacaoController {
 
-    private final AvaliacaoRepository avaliacaoRepository;
-    private final ServicoRepository servicoRepository;
-    private final UsuarioRepository usuarioRepository;
+    private final AvaliacaoService avaliacaoService;
 
     @GetMapping
     public Page<AvaliacaoResponseDto> listarTodos(Pageable pageable) {
-        return avaliacaoRepository.findAll(pageable)
-                .map(AvaliacaoResponseDto::fromAvaliacao);
+        return avaliacaoService.listarTodos(pageable);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AvaliacaoResponseDto> buscarPorId(@PathVariable String id) {
-        Avaliacao avaliacao = avaliacaoRepository.findById(UUID.fromString(id)).get();
-        return ResponseEntity.ok(AvaliacaoResponseDto.fromAvaliacao(avaliacao));
+        AvaliacaoResponseDto avaliacao = avaliacaoService.buscarPorId(UUID.fromString(id));
+        return ResponseEntity.ok(avaliacao);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public AvaliacaoResponseDto criar(@Valid @RequestBody AvaliacaoRequestDto dto) {
-        Servico servico = servicoRepository.findById(dto.getServicoId()).get();
-        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId()).get();
-        Avaliacao avaliacao = dto.toAvaliacao()
-                .withServico(servico)
-                .withUsuario(usuario);
-        Avaliacao salva = avaliacaoRepository.save(avaliacao);
-        return AvaliacaoResponseDto.fromAvaliacao(salva);
+        return avaliacaoService.criar(dto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@PathVariable String id) {
-        avaliacaoRepository.deleteById(UUID.fromString(id));
+        avaliacaoService.deletar(UUID.fromString(id));
     }
 }
+

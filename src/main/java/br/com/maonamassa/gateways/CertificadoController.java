@@ -1,18 +1,16 @@
 package br.com.maonamassa.gateways;
 
-import br.com.maonamassa.domains.Certificado;
-import br.com.maonamassa.domains.Curso;
-import br.com.maonamassa.domains.Usuario;
 import br.com.maonamassa.gateways.dtos.request.CertificadoRequestDto;
 import br.com.maonamassa.gateways.dtos.response.CertificadoResponseDto;
+import br.com.maonamassa.services.CertificadoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 @RestController
@@ -20,37 +18,29 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CertificadoController {
 
-    private final CertificadoRepository certificadoRepository;
-    private final UsuarioRepository usuarioRepository;
-    private final CursoRepository cursoRepository;
+    private final CertificadoService certificadoService;
 
     @GetMapping
     public Page<CertificadoResponseDto> listarTodos(Pageable pageable) {
-        return certificadoRepository.findAll(pageable)
-                .map(CertificadoResponseDto::fromCertificado);
+        return certificadoService.listarTodos(pageable);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CertificadoResponseDto> buscarPorId(@PathVariable String id) {
-        Certificado certificado = certificadoRepository.findById(UUID.fromString(id)).get();
-        return ResponseEntity.ok(CertificadoResponseDto.fromCertificado(certificado));
+        CertificadoResponseDto certificado = certificadoService.buscarPorId(UUID.fromString(id));
+        return ResponseEntity.ok(certificado);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CertificadoResponseDto criar(@Valid @RequestBody CertificadoRequestDto dto) {
-        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId()).get();
-        Curso curso = cursoRepository.findById(dto.getCursoId()).get();
-        Certificado certificado = dto.toCertificado()
-                .withUsuario(usuario)
-                .withCurso(curso);
-        Certificado salvo = certificadoRepository.save(certificado);
-        return CertificadoResponseDto.fromCertificado(salvo);
+        return certificadoService.criar(dto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@PathVariable String id) {
-        certificadoRepository.deleteById(UUID.fromString(id));
+        certificadoService.deletar(UUID.fromString(id));
     }
 }
+

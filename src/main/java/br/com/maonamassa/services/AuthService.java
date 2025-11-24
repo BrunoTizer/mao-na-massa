@@ -1,8 +1,11 @@
 package br.com.maonamassa.services;
 
+import br.com.maonamassa.domains.Usuario;
+import br.com.maonamassa.gateways.UsuarioRepository;
 import br.com.maonamassa.gateways.dtos.request.LoginRequestDto;
 import br.com.maonamassa.gateways.dtos.request.UsuarioRequestDto;
 import br.com.maonamassa.gateways.dtos.response.AuthResponseDto;
+import br.com.maonamassa.gateways.dtos.response.UsuarioResponseDto;
 import br.com.maonamassa.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
