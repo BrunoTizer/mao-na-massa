@@ -11,7 +11,6 @@ import java.util.UUID;
 @Data
 public class ServicoRequestDto {
 
-    @NotNull(message = "ID do profissional é obrigatório")
     private UUID profissionalId;
 
     @NotBlank(message = "Título é obrigatório")
