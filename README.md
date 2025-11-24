@@ -10,7 +10,16 @@ Plataforma que capacita pessoas em ofícios manuais (pedreiro, eletricista, enca
 - **RM 560649** - Thomas Henrique Baute
 - **RM 559999** - Bruno Mateus Tizer das Chagas
 
-## Como rodar?
+## Deploy
+
+🚀 **API em Produção:** http://20.63.88.224:8080
+
+### Endpoints principais:
+- API Base: `http://20.63.88.224:8080/api/v1`
+- Swagger: `http://20.63.88.224:8080/swagger-ui/index.html`
+- Health Check: `http://20.63.88.224:8080/actuator/health`
+
+## Como rodar localmente?
 
 1. Abrir o projeto no IntelliJ
 2. Rodar a classe `MaoNaMassaApplication.java`
