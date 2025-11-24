@@ -22,6 +22,7 @@ public class AuthService {
     private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
     private final UsuarioService usuarioService;
+    private final UsuarioRepository usuarioRepository;
 
     public AuthResponseDto login(LoginRequestDto request) {
         authenticationManager.authenticate(
@@ -34,8 +35,11 @@ public class AuthService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
         String token = jwtService.generateToken(userDetails);
 
+        Usuario usuario = usuarioRepository.findByEmail(request.getEmail()).orElseThrow();
+
         return AuthResponseDto.builder()
                 .token(token)
+                .usuario(UsuarioResponseDto.fromUsuario(usuario))
                 .build();
     }
 
@@ -45,8 +49,11 @@ public class AuthService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
         String token = jwtService.generateToken(userDetails);
 
+        Usuario usuario = usuarioRepository.findByEmail(request.getEmail()).orElseThrow();
+
         return AuthResponseDto.builder()
                 .token(token)
+                .usuario(UsuarioResponseDto.fromUsuario(usuario))
                 .build();
     }
 }
