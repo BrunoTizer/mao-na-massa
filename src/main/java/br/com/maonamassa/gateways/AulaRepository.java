@@ -11,4 +11,5 @@ import java.util.UUID;
 @Repository
 public interface AulaRepository extends JpaRepository<Aula, UUID> {
     Page<Aula> findByCursoId(UUID cursoId, Pageable pageable);
+    boolean existsByCursoId(UUID cursoId);
 }

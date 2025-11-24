@@ -11,4 +11,5 @@ import java.util.UUID;
 @Repository
 public interface ServicoRepository extends JpaRepository<Servico, UUID> {
     Page<Servico> findByCidade(String cidade, Pageable pageable);
+    boolean existsByProfissionalId(UUID profissionalId);
 }

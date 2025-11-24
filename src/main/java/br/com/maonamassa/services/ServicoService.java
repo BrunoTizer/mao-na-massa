@@ -39,10 +39,17 @@ public class ServicoService {
     }
 
     public ServicoResponseDto criar(ServicoRequestDto dto) {
-        Profissional profissional = profissionalRepository.findById(dto.getProfissionalId())
-                .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
+        Profissional profissional = null;
 
-        Servico servico = dto.toServico().withProfissional(profissional);
+        if (dto.getProfissionalId() != null) {
+            profissional = profissionalRepository.findById(dto.getProfissionalId())
+                    .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
+        }
+
+        Servico servico = dto.toServico()
+                .withProfissional(profissional)
+                .withStatus(profissional == null ? "PENDENTE" : "ACEITO");
+
         Servico salvo = servicoRepository.save(servico);
         return ServicoResponseDto.fromServico(salvo);
     }
@@ -62,6 +69,25 @@ public class ServicoService {
                 .withPreco(dto.getPreco());
 
         Servico salvo = servicoRepository.save(atualizado);
+        return ServicoResponseDto.fromServico(salvo);
+    }
+
+    public ServicoResponseDto aceitar(UUID id, UUID profissionalId) {
+        Servico servico = servicoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
+
+        if (!"PENDENTE".equals(servico.getStatus())) {
+            throw new RuntimeException("Serviço já foi aceito por outro profissional");
+        }
+
+        Profissional profissional = profissionalRepository.findById(profissionalId)
+                .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
+
+        Servico aceito = servico
+                .withProfissional(profissional)
+                .withStatus("ACEITO");
+
+        Servico salvo = servicoRepository.save(aceito);
         return ServicoResponseDto.fromServico(salvo);
     }
 

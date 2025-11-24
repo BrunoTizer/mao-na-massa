@@ -2,8 +2,12 @@ package br.com.maonamassa.services;
 
 import br.com.maonamassa.domains.Area;
 import br.com.maonamassa.domains.Curso;
+import br.com.maonamassa.exceptions.BusinessException;
+import br.com.maonamassa.exceptions.ResourceNotFoundException;
 import br.com.maonamassa.gateways.AreaRepository;
+import br.com.maonamassa.gateways.AulaRepository;
 import br.com.maonamassa.gateways.CursoRepository;
+import br.com.maonamassa.gateways.QuizRepository;
 import br.com.maonamassa.gateways.dtos.request.CursoRequestDto;
 import br.com.maonamassa.gateways.dtos.response.CursoResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +23,8 @@ public class CursoService {
 
     private final CursoRepository cursoRepository;
     private final AreaRepository areaRepository;
+    private final AulaRepository aulaRepository;
+    private final QuizRepository quizRepository;
 
     public Page<CursoResponseDto> listarTodos(UUID areaId, Pageable pageable) {
         Page<Curso> cursos;
@@ -34,13 +40,13 @@ public class CursoService {
 
     public CursoResponseDto buscarPorId(UUID id) {
         Curso curso = cursoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Curso não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Curso não encontrado"));
         return CursoResponseDto.fromCurso(curso);
     }
 
     public CursoResponseDto criar(CursoRequestDto dto) {
         Area area = areaRepository.findById(dto.getAreaId())
-                .orElseThrow(() -> new RuntimeException("Área não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Área não encontrada"));
 
         Curso curso = dto.toCurso().withArea(area);
         Curso salvo = cursoRepository.save(curso);
@@ -49,10 +55,10 @@ public class CursoService {
 
     public CursoResponseDto atualizar(UUID id, CursoRequestDto dto) {
         Curso curso = cursoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Curso não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Curso não encontrado"));
 
         Area area = areaRepository.findById(dto.getAreaId())
-                .orElseThrow(() -> new RuntimeException("Área não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Área não encontrada"));
 
         Curso atualizado = curso
                 .withTitulo(dto.getTitulo())
@@ -66,8 +72,17 @@ public class CursoService {
 
     public void deletar(UUID id) {
         if (!cursoRepository.existsById(id)) {
-            throw new RuntimeException("Curso não encontrado");
+            throw new ResourceNotFoundException("Curso não encontrado");
         }
+
+        if (aulaRepository.existsByCursoId(id)) {
+            throw new BusinessException("Não é possível excluir este curso pois existem aulas vinculadas a ele");
+        }
+
+        if (quizRepository.existsByCursoId(id)) {
+            throw new BusinessException("Não é possível excluir este curso pois existem quizzes vinculados a ele");
+        }
+
         cursoRepository.deleteById(id);
     }
 }

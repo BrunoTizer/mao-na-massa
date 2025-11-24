@@ -8,4 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface CertificadoRepository extends JpaRepository<Certificado, UUID> {
+    boolean existsByUsuarioId(UUID usuarioId);
+    boolean existsByCursoId(UUID cursoId);
 }

@@ -29,5 +29,6 @@ public class Servico {
     private String cidade;
     private Double preco;
     private LocalDate dataPublicacao;
+    private String status;
 
 }

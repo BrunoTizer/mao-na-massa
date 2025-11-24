@@ -8,4 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface RespostaQuizRepository extends JpaRepository<RespostaQuiz, UUID> {
+    boolean existsByQuizId(UUID quizId);
+    boolean existsByUsuarioId(UUID usuarioId);
 }

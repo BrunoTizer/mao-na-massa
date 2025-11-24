@@ -11,4 +11,5 @@ import java.util.UUID;
 @Repository
 public interface ProfissionalRepository extends JpaRepository<Profissional, UUID> {
     Page<Profissional> findByDisponivel(Boolean disponivel, Pageable pageable);
+    boolean existsByUsuarioId(UUID usuarioId);
 }

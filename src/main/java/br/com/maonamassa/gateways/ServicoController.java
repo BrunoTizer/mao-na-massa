@@ -45,6 +45,11 @@ public class ServicoController {
         return servicoService.atualizar(UUID.fromString(id), dto);
     }
 
+    @PutMapping("/{id}/aceitar")
+    public ServicoResponseDto aceitar(@PathVariable String id, @RequestParam String profissionalId) {
+        return servicoService.aceitar(UUID.fromString(id), UUID.fromString(profissionalId));
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@PathVariable String id) {
